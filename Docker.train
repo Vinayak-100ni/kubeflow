@@ -1,0 +1,8 @@
+FROM python:3.9
+
+WORKDIR /app
+COPY src/train.py .
+
+RUN pip install pandas scikit-learn mlflow joblib
+
+CMD ["python", "train.py"]
