@@ -16,6 +16,9 @@ jobs:
           docker build -t kubeflow.azurecr.io/train:latest -f Dockerfile.train .
           docker build -t kubeflow.azurecr.io/prepare:latest -f Dockerfile.prepare .
           docker build -t kubeflow.azurecr.io/evaluate:latest -f Dockerfile.evaluate .
+      - name: Login to ACR
+        run: |
+          echo ${{ secrets.ACR_PASSWORD }} | docker login kubeflow.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
       - name: Push Images
         run: |
