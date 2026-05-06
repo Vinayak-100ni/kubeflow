@@ -1,5 +1,4 @@
-from kfp import dsl
-
+from kfp import dsl, compiler
 
 def validate_model():
     import json
@@ -41,3 +40,9 @@ def pipeline():
         command=["kubectl"],
         arguments=["apply", "-f", "/manifests/deployment.yaml"]
     ).after(validate)
+
+if __name__ == "__main__":
+    compiler.Compiler().compile(
+        pipeline_func=pipeline,
+        package_path="pipeline.yaml"
+    )
