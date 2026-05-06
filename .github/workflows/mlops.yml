@@ -1,0 +1,28 @@
+name: MLOps Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker Images
+        run: |
+          docker build -t kubeflow.azurecr.io/train:latest -f Dockerfile.train .
+          docker build -t kubeflow.azurecr.io/prepare:latest -f Dockerfile.prepare .
+          docker build -t kubeflow.azurecr.io/evaluate:latest -f Dockerfile.evaluate .
+
+      - name: Push Images
+        run: |
+          docker push kubeflow.azurecr.io/train:latest
+          docker push kubeflow.azurecr.io/prepare:latest
+          docker push kubeflow.azurecr.io/evaluate:latest
+
+      - name: Upload Pipeline
+        run: |
+          python pipeline.py
